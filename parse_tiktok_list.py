@@ -698,7 +698,7 @@ def parse_entries(raw: str) -> list[dict]:
 def write_excel(entries: list[dict], path: str) -> None:
     wb = Workbook()
     ws = wb.active
-    ws.title = "O bir defineci"
+    ws.title = "Videolar"
 
     headers = [
         "No",
@@ -753,7 +753,7 @@ def write_excel(entries: list[dict], path: str) -> None:
     ws.row_dimensions[1].height = 28
 
     # Summary sheet
-    ws2 = wb.create_sheet("Özet")
+    ws2 = wb.create_sheet("Ozet")
     total = len(entries)
     with_count = sum(1 for e in entries if e["goruntulenme_sayi"] is not None)
     total_views = sum(e["goruntulenme_sayi"] or 0 for e in entries)
@@ -792,20 +792,55 @@ def write_excel(entries: list[dict], path: str) -> None:
     wb.save(path)
 
 
+def write_csv(entries: list[dict], path: str, delimiter: str = ";") -> None:
+    import csv
+    from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
+
+    def clean(s):
+        if s is None:
+            return ""
+        return ILLEGAL_CHARACTERS_RE.sub("", str(s)).replace("\n", " ").strip()
+
+    headers = [
+        "No",
+        "Sanatci / Ses Sahibi",
+        "Parca / Ses Adi",
+        "Aciklama / Hashtagler",
+        "Goruntulenme",
+        "Goruntulenme (Sayi)",
+        "Olusturan",
+    ]
+    with open(path, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.writer(f, delimiter=delimiter)
+        w.writerow(headers)
+        for i, e in enumerate(entries, 1):
+            w.writerow([
+                i,
+                clean(e["sanatci"]),
+                clean(e["parca"]),
+                clean(e["aciklama"]),
+                clean(e["goruntulenme"]),
+                e["goruntulenme_sayi"] if e["goruntulenme_sayi"] is not None else "",
+                "O bir defineci",
+            ])
+
+
 def main() -> None:
     entries = parse_entries(RAW)
     out = "/workspace/O_bir_defineci_videolar.xlsx"
     write_excel(entries, out)
+    write_csv(entries, "/workspace/O_bir_defineci_videolar.csv", ";")
+    write_csv(entries, "/workspace/O_bir_defineci_videolar_virgullu.csv", ",")
     print(f"Toplam kayıt: {len(entries)}")
     missing = [i + 1 for i, e in enumerate(entries) if not e["goruntulenme"]]
     print(f"Görüntülenmesi eksik: {len(missing)} -> {missing[:10]}")
-    # show first and last few
     for e in entries[:3]:
         print(e)
     print("...")
     for e in entries[-3:]:
         print(e)
     print(f"Kaydedildi: {out}")
+    print("CSV: O_bir_defineci_videolar.csv")
 
 
 if __name__ == "__main__":

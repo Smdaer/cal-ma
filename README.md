@@ -1,18 +1,32 @@
 # O bir defineci — TikTok video listesi
 
-`O_bir_defineci_videolar.xlsx` dosyası, paylaşılan TikTok ses/video meta verilerini Excel listesine dönüştürür.
+Paylaşılan TikTok ses/video meta verileri Excel listesine dönüştürülmüştür (**293 video**).
 
-## Dosyalar
+## Dosyalar (açmak için)
 
-- `O_bir_defineci_videolar.xlsx` — Ana liste (293 video)
-  - **O bir defineci** sayfası: No, Sanatçı, Parça, Açıklama/Hashtagler, Görüntülenme
-  - **Özet** sayfası: toplam ve en çok görüntülenen 20 video
-- `parse_tiktok_list.py` — Listeyi yeniden üretmek için betik
+| Dosya | Nasıl açılır |
+|---|---|
+| `O_bir_defineci_videolar.csv` | Excel’de çift tıklayın (Türkçe Excel için `;` ayracı, UTF-8) |
+| `O_bir_defineci_videolar_virgullu.csv` | Virgüllü CSV alternatif |
+| `O_bir_defineci_liste.xlsx` | Excel / Google Sheets (xlsxwriter) |
+| `O_bir_defineci_videolar.xlsx` | Excel / Google Sheets (openpyxl) |
+
+> XLSX açılmazsa **CSV** dosyasını kullanın: Excel → Veri → Metinden/CSV’den veya doğrudan çift tık.
+
+## Sütunlar
+
+1. No  
+2. Sanatçı / Ses Sahibi  
+3. Parça / Ses Adı  
+4. Açıklama / Hashtagler  
+5. Görüntülenme  
+6. Görüntülenme (Sayı)  
+7. Oluşturan  
 
 ## Yeniden oluşturma
 
 ```bash
-pip install openpyxl
+pip install -r requirements.txt
 python3 parse_tiktok_list.py
 ```
 
